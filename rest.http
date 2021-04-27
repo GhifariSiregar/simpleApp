@@ -1,0 +1,72 @@
+GET http://localhost:3300/test HTTP/1.1
+Content-Type: application/json
+
+###
+
+GET http://localhost:3300/ HTTP/1.1
+Content-Type: application/json
+
+###
+
+POST http://localhost:3300/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "ghifari@fit.id",
+    "password": "K123sdsada."
+}
+
+###
+
+POST http://localhost:3300/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "ghifari@gmail.com",
+    "password": "1234566"
+}
+
+###
+
+POST http://localhost:3300/user/createloan HTTP/1.1
+Content-Type: application/json
+
+{
+    "uid": 3,
+    "tenur": 12,
+    "totalpinjam": 5000000
+}
+
+###
+
+POST http://localhost:3300/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "blablabla@gmail.com", 
+    "name": "testName", 
+    "address": "testadd", 
+    "occupancy": "testJob", 
+    "ktp": 21312312312, 
+    "gender": "Male", 
+    "password": "K123sdsada.",
+    "confirmPassword": "K123sdsada."
+}
+
+###
+
+POST http://localhost:3300/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "blablabla@gmail.com", 
+    "password": "K123sdsada."
+}
+
+###
+
+POST http://localhost:3300/logout?id=1 HTTP/1.1
+
+###
+
+GET http://localhost:3300/user/dashboard?id=3 HTTP/1.1
