@@ -1,5 +1,7 @@
 import { executeQueryModel } from "./model.executeQuery";
 
+const CryptoJS = require("crypto-js");
+
 export class UserAuthModel {
     async checkstatus(id: string): Promise<any> {
         return new Promise((resolve, reject) => {
@@ -21,15 +23,18 @@ export class UserAuthModel {
         })            
     }
 
-    async register(req: any,
-                    res: any,
-                    email: string,
-                    name: string,
-                    address: string,
-                    occupancy: string,
-                    ktp: number,
-                    gender: string,
-                    password: string): Promise<void> {
+    async register(req: any, res: any): Promise<void> {
+
+            let email = req.body.email;
+            let name = req.body.name;
+            let address = req.body.address;
+            let occupancy = req.body.occupancy;
+            let ktp = req.body.ktp;
+            let gender = req.body.gender;
+            let confirmPassword = req.body.confirmPassword;
+
+            //PASSWORD HASHING
+            let password = CryptoJS.AES.encrypt(confirmPassword, '23(fd*3&!').toString();
 
             let sql = `INSERT INTO
                         users (email, name, address, occupancy, ktp, gender, logged_in, password)
@@ -39,15 +44,15 @@ export class UserAuthModel {
             executeQueryModel.executeQuery(sql)
             .then(function() {
                 res.status(200).json({
-                    "status": "200",
-                    "message": "New User Created"
+                    "status": "SUCCESS",
+                    "message": "NEW_USER_CREATED"
                 });
             })
             .catch(function(err) {
                 console.log(err)
                 res.status(500).json({
-                    "status": "500",
-                    "message": "Internal Server Error"
+                    "status": "NOK",
+                    "message": "INTERNAL_SERVER_ERROR"
                 });
             })             
     }
@@ -78,7 +83,7 @@ export class UserAuthModel {
         })    
     }
 
-    async login(req: any, res: any, email: string): Promise<void> {
+    async login(res: any, email: string): Promise<void> {
         let sql = `UPDATE
                     users
                    SET
@@ -89,20 +94,21 @@ export class UserAuthModel {
         executeQueryModel.executeQuery(sql)
         .then(function() {
             res.status(200).json({
-                "status": "200",
-                "message": "User Has Logged In"
+                "status": "SUCCESS",
+                "message": "USER_HAS_LOGGED_IN"
             });
         })
         .catch(function(err) {
             console.log(err);
             res.status(500).json({
-                "status": "500",
-                "message": "Internal Server Error"
+                "status": "NOK",
+                "message": "INTERNAL_SERVER_ERROR"
             });
         })             
     }
 
-    async logout(req: any, res: any, id: string): Promise<void> {
+    async logout(req: any, res: any): Promise<void> {
+        let id = req.query.id;
         let sql = `UPDATE
                     users
                    SET
@@ -117,8 +123,8 @@ export class UserAuthModel {
         .catch(function(err) {
             console.log(err)
             res.status(500).json({
-                "status": "500",
-                "message": "Internal Server Error"
+                "status": "NOK",
+                "message": "INTERNAL_SERVER_ERROR"
             });
         })             
     }

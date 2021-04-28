@@ -1,11 +1,11 @@
 import { executeQueryModel } from "./model.executeQuery";
 
 export class UserLoanModel {
-    async createLoan(req: any, 
-                     res: any, 
-                     uid: string, 
-                     tenur: number, 
-                     totalpinjam: number): Promise<void> {
+    async createLoan(req: any, res: any): Promise<void> {
+        
+        let uid: string = req.body.id;
+        let tenur: number = req.body.tenur;
+        let totalpinjam: number = req.body.totalpinjam;
                          
         let sql =  `INSERT INTO
                      loan_list (id, loan_length, loan_amount, status)
@@ -15,15 +15,15 @@ export class UserLoanModel {
         await executeQueryModel.executeQuery(sql)
         .then(function(data) {
             res.status(200).json({
-                "status": 200,
+                "status": "SUCCESS",
                 "message": "SUCCESS"
             })
         })
         .catch(function(err) {
             console.log(err)
             res.status(500).json({
-                "status": 500,
-                "message": "Internal Server error"
+                "status": "NOK",
+                "message": "INTERNAL_SERVER_ERROR"
             })
         })
                     

@@ -7,12 +7,12 @@ export class UserLoanController {
         let totalpinjam: number = req.body.totalpinjam;
 
         if(id && tenur && totalpinjam) {
-            userLoanServices.createLoan(req, res, id, tenur, totalpinjam)
+            userLoanServices.createLoan(req, res)
         }
         else {
-            res.status(403).json({
-                "status": 403,
-                "message": "The inputted data is not correct"
+            res.status(400).json({
+                "status": "FAILED",
+                "message": "THE_INPUTTED_DATA_IS_NOT_CORRECT"
             })
         }
     }

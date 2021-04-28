@@ -12,7 +12,7 @@ export class UserAuthController {
         }
         else {
             res.status(400).json({
-                "status": "400",
+                "status": "FAILED",
                 "message": "FAILED"
             });
         }
@@ -20,8 +20,7 @@ export class UserAuthController {
 
     //LOGOUT (STOP SESSION IN DATABASE)
     logout(req: any, res: any) {
-        let id = req.query.id;
-        userAuthServices.logout(req, res, id);
+        userAuthServices.logout(req, res);
     }
 
     //NEW USER REGISTRATION
@@ -33,30 +32,23 @@ export class UserAuthController {
         let ktp = req.body.ktp;
         let gender = req.body.gender;
         let password = req.body.password;
-        let confirmPassword = req.body.confirmPassword
+        let confirmPassword = req.body.confirmPassword;
 
         if(!email || 
             !name || 
             !address || 
             !occupancy || 
             !ktp ||
-            !gender) {
-                res.status(403).json({
-                    "status": "403",
-                    "message": "Please fill all the data first !"
+            !gender ||
+            !password ||
+            !confirmPassword) {
+                res.status(400).json({
+                    "status": "FAILED",
+                    "message": "PLEASE_FILL_ALL_THE_DATA_FIRST!"
                 });
         }
         else {
-            userAuthServices.register(req, 
-                                      res, 
-                                      email, 
-                                      name, 
-                                      address, 
-                                      occupancy, 
-                                      ktp, 
-                                      gender,
-                                      password, 
-                                      confirmPassword)
+            userAuthServices.register(req, res)
         }
     }
 }

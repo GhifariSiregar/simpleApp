@@ -2,7 +2,7 @@ import { userDashboardModel } from "../model/model.usersDashboard";
 
 export class UserDashboardServices {
     getDashboard(req: any, res: any) {
-        userDashboardModel.getDashboard(req, res, req.query.id)
+        userDashboardModel.getDashboard(req, res)
     }
 }
 

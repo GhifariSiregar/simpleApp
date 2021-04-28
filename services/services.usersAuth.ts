@@ -16,77 +16,62 @@ export class UserAuthServices {
 
         //COMPARE PASSWORD
         if(originalText !== password || passwordRef === "Not Found") {
-            res.status(403).json({
-                "status": "403",
-                "message": "Invalid email/password"
+            res.status(400).json({
+                "status": "FAILED",
+                "message": "INVALID_EMAIL/PASSWORD"
             });
         }
         else {
-            userAuthModel.login(req, res, email);
+            userAuthModel.login(res, email);
         }
     }
 
-    async register(req: any, 
-                   res: any,
-                   email: string,
-                   name: string,
-                   address: string,
-                   occupancy: string,
-                   ktp: number,
-                   gender: string,
-                   password: string,
-                   confirmPassword: string) {
+    async register(req: any, res: any) {
 
+        let email = req.body.email;
+        let password = req.body.password;
+        let confirmPassword = req.body.confirmPassword;
+        
+        //PASSWORD STRENGTH CONSTRAINT
         const hasUpperCase = /[A-Z]/.test(password);
         const hasLowerCase = /[a-z]/.test(password);
         const hasNumbers = /\d/.test(password);
         const hasNonalphas = /\W/.test(password);
 
+        //EMAIL VALIDATION CHECK
+        if(email.split('@').length !== 2 && email.split('@')[1].split('.').length !== 2) {
+            res.status(400).json({
+                "status": "FAILED",
+                "message": "EMAIL_IS_NOT_VALID"
+            });
+        }
+        
         //PASSWORD STRENGTH CHECK
-        if(password.length < 8 || 
+        else if(password.length < 8 || 
             !hasLowerCase ||
             !hasUpperCase ||
             !hasNumbers ||
             !hasNonalphas) {
-                res.status(403).json({
-                    "status": "403",
-                    "message": "Password is not strong"
+                res.status(400).json({
+                    "status": "FAILED",
+                    "message": "PASSWORD_IS_NOT_STRONG_ENOUGH"
                 });
-        }
-       
-        //EMAIL VALIDATION CHECK
-        else if(email.split('@').length !== 2 && email.split('@')[1].split('.').length !== 2) {
-            res.status(403).json({
-                "status": "403",
-                "message": "Email is not valid"
-            });
         }
 
         //PASSWORD CONFIRMATION CHECK
         else if(password !== confirmPassword) {
-            res.status(403).json({
-                "status": "403",
-                "message": "Password is not matched"
+            res.status(400).json({
+                "status": "FAILED",
+                "message": "PASSWORD_IS_NOT_MATCHED"
             });
         }
         else {
-
-            //PASSWORD HASHING
-            let hashPassword = CryptoJS.AES.encrypt(password, '23(fd*3&!').toString();
-            userAuthModel.register(req,
-                                    res,
-                                    email, 
-                                    name, 
-                                    address, 
-                                    occupancy, 
-                                    ktp, 
-                                    gender, 
-                                    hashPassword)
+            userAuthModel.register(req, res)
         }
     }
 
-    async logout(req: any, res: any, id: string) {
-        userAuthModel.logout(req, res, id);
+    async logout(req: any, res: any) {
+        userAuthModel.logout(req, res);
     } 
 }
 

@@ -8,7 +8,7 @@ export class ProductServices {
                     "id": 1,
                     "name": "Apel"
                 },
-                "status": "200",
+                "status": "SUCCESS",
                 "message": "SUCCESS"
             });
         }
@@ -18,14 +18,14 @@ export class ProductServices {
                     "id": 2,
                     "name": "Pisang"
                 },
-                "status": "200",
+                "status": "SUCCESS",
                 "message": "SUCCESS"
             });
         }
         else {
             res.status(404).json({
-                "status": "404",
-                "message": "Product ID not found"
+                "status": "FAILED",
+                "message": "PRODUCT_ID_IS_NOT_FOUND"
             });
         }
     }
