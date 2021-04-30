@@ -1,4 +1,5 @@
 import { executeQueryModel } from "./model.executeQuery";
+import { redisManagement } from "./model.redis";
 
 const CryptoJS = require("crypto-js");
 const jwt = require('jsonwebtoken');
@@ -60,7 +61,7 @@ export class UserAuthModel {
                         });
                     }
                     else {
-                        jwt.sign({"id": data.rows[0].id}, "!#shad321.", { expiresIn: 60 * 60 }, function(err: any, token: any) {
+                        jwt.sign({"id": data.rows[0].id, "email": email}, "!#shad321.", { expiresIn: 60 * 60 }, function(err: any, token: any) {
                             if(err) {
                                 console.log(err.message)
                                 res.status(500).json({
@@ -140,7 +141,7 @@ export class UserAuthModel {
                     });
                 }
                 else {
-                    jwt.sign({"id": data.rows[0].id}, "!#shad321.", { expiresIn: 60 * 60 }, function(err: any, token: any) {
+                    jwt.sign({"id": data.rows[0].id, "email": email}, "!#shad321.", { expiresIn: 60 * 60 }, function(err: any, token: any) {
                         if(err) {
                             console.log(err.message)
                             res.status(500).json({
@@ -149,6 +150,7 @@ export class UserAuthModel {
                             });
                         }
                         else {
+                            redisManagement.setData(email, 3600, token);
                             res.status(200).json({
                                 "status": "SUCCESS",
                                 "message": "USER_HAS_LOGGED_IN",

@@ -65,6 +65,15 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:3300/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "aaa@aa.com", 
+    "password": "K123sdsada."
+}
+
+###
 POST http://localhost:3300/logout?id=1 HTTP/1.1
 
 ###

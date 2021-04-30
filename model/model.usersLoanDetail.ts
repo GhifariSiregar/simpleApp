@@ -1,4 +1,5 @@
 import { executeQueryModel } from "./model.executeQuery";
+import { redisManagement } from "../model/model.redis";
 
 const jwt = require('jsonwebtoken');
 
@@ -6,7 +7,11 @@ export class UserLoanDetailModel {
     async loanDetail(req: any, res: any): Promise<void> {
 
         //CHECK FOR USER TOKEN
-        jwt.verify(req.body.token, "!#shad321.", async function(err: any, decoded: any) {
+        jwt.verify(req.body.token, "!#shad321.", async function(err: any, decoded: any): Promise<void> {
+            
+            //TOKEN VERIFICATION
+            const email = await redisManagement.getData(decoded.email);
+
             if(err) {
                 console.log(err.message)
                 res.status(500).json({
@@ -16,7 +21,7 @@ export class UserLoanDetailModel {
             }
 
             //GET USER LISTED LOAN BY TOKEN
-            else if(!decoded.id) {
+            else if(!decoded.id || req.body.token !== email) {
                 res.status(404).json({
                     "status": "FAILED",
                     "message": "NOT_FOUND"
