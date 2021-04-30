@@ -1,8 +1,8 @@
 import { userDashboardModel } from "../model/model.usersDashboard";
 
 export class UserDashboardServices {
-    getDashboard(req: any, res: any) {
-        userDashboardModel.getDashboard(req, res)
+    getDashboard(id: string, res: any) {
+        userDashboardModel.getDashboard(id, res)
     }
 }
 

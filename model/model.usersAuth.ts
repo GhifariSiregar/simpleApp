@@ -1,6 +1,7 @@
 import { executeQueryModel } from "./model.executeQuery";
 
 const CryptoJS = require("crypto-js");
+const jwt = require('jsonwebtoken');
 
 export class UserAuthModel {
     async checkstatus(id: string): Promise<any> {
@@ -43,10 +44,40 @@ export class UserAuthModel {
             
             executeQueryModel.executeQuery(sql)
             .then(function() {
-                res.status(200).json({
-                    "status": "SUCCESS",
-                    "message": "NEW_USER_CREATED"
-                });
+                sql = `SELECT
+                    id
+                   FROM
+                    users
+                   WHERE 
+                    email = '` + email + `';`
+
+                executeQueryModel.executeQuery(sql)
+                .then(function(data) {
+                    if(typeof data.rows[0] === "undefined") {
+                        res.status(404).json({
+                            "status": "FAILED",
+                            "message": "USER_NOT_FOUND"
+                        });
+                    }
+                    else {
+                        jwt.sign({"id": data.rows[0].id}, "!#shad321.", { expiresIn: 60 * 60 }, function(err: any, token: any) {
+                            if(err) {
+                                console.log(err.message)
+                                res.status(500).json({
+                                    "status": "NOK",
+                                    "message": "INTERNAL_SERVER_ERROR"
+                                });
+                            }
+                            else {
+                                res.status(200).json({
+                                    "status": "SUCCESS",
+                                    "message": "NEW_USER_CREATED",
+                                    "token": token
+                                });
+                            }
+                        });
+                    }
+                })
             })
             .catch(function(err) {
                 console.log(err)
@@ -93,10 +124,40 @@ export class UserAuthModel {
 
         executeQueryModel.executeQuery(sql)
         .then(function() {
-            res.status(200).json({
-                "status": "SUCCESS",
-                "message": "USER_HAS_LOGGED_IN"
-            });
+            sql = `SELECT
+                    id
+                   FROM
+                    users
+                   WHERE 
+                    email = '` + email + `';`
+
+            executeQueryModel.executeQuery(sql)
+            .then(function(data) {
+                if(typeof data.rows[0] === "undefined") {
+                    res.status(404).json({
+                        "status": "FAILED",
+                        "message": "USER_NOT_FOUND"
+                    });
+                }
+                else {
+                    jwt.sign({"id": data.rows[0].id}, "!#shad321.", { expiresIn: 60 * 60 }, function(err: any, token: any) {
+                        if(err) {
+                            console.log(err.message)
+                            res.status(500).json({
+                                "status": "NOK",
+                                "message": "INTERNAL_SERVER_ERROR"
+                            });
+                        }
+                        else {
+                            res.status(200).json({
+                                "status": "SUCCESS",
+                                "message": "USER_HAS_LOGGED_IN",
+                                "token": token
+                            });
+                        }
+                    });
+                }
+            })
         })
         .catch(function(err) {
             console.log(err);
@@ -118,7 +179,10 @@ export class UserAuthModel {
 
         executeQueryModel.executeQuery(sql)
         .then(function() {
-            res.status(200).redirect("/login");
+            res.status(200).json({
+                "status": "SUCCESS",
+                "message": "USER_HAS_LOGGED_OUT"
+            });
         })
         .catch(function(err) {
             console.log(err)

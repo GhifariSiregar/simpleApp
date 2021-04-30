@@ -1,13 +1,13 @@
 import { executeQueryModel } from "./model.executeQuery";
 
 export class UserDashboardModel {
-    async getDashboard(req: any, res: any): Promise<void> {              
+    async getDashboard(id: string, res: any): Promise<void> {              
         let sql =  `SELECT
                      *
                     FROM
                      loan_list
                     WHERE 
-                     id = '` + req.query.id + `';`
+                     id = '` + id + `';`
         
         await executeQueryModel.executeQuery(sql)
         .then(function(data) {
@@ -23,8 +23,7 @@ export class UserDashboardModel {
                 "status": "NOK",
                 "message": "INTERNAL_SERVER_ERROR"
             })
-        })
-                    
+        })       
     }
 }
 
