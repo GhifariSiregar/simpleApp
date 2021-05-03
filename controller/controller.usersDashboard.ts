@@ -5,7 +5,7 @@ export class UserDashboardController {
     async getDashboard(req: any, res: any, next: any) {
         try {
             //CHECK FOR USER TOKEN
-            const userToken = await tokenManagement.verifyToken(req.body.token);
+            const userToken: any = await tokenManagement.verifyToken(req.body.token);
 
             //GET USER LISTED LOAN BY TOKEN
             if(!userToken.id) {
@@ -15,7 +15,7 @@ export class UserDashboardController {
                 })
             }
             else {
-                next();
+                usersDashboardServices.getDashboard(req, res);
             }
         }
         catch(err) {
@@ -27,13 +27,13 @@ export class UserDashboardController {
         }
     }
 
-    createLoan(req: any, res: any, next: any) {
+    createLoan(req: any, res: any) {
         let token: string = req.body.token;
         let loanLength: number = req.body.loanLength;
         let loanAmount: number = req.body.loanAmount;
 
         if(token && loanLength && loanAmount) {
-            next();
+            usersDashboardServices.createLoan(req, res);
         }
         else {
             res.status(400).json({
@@ -43,9 +43,9 @@ export class UserDashboardController {
         }
     }
 
-    loanDetail(req: any, res: any, next: any) {
+    loanDetail(req: any, res: any) {
         if(req.query.id) {
-            next();
+            usersDashboardServices.loanDetail(req, res);
         }
         else {
             res.status(400).json({
@@ -56,4 +56,4 @@ export class UserDashboardController {
     }
 }
 
-export const usersDashboardController = new UserDashboardController();
+export const usersDashboardController: UserDashboardController = new UserDashboardController();

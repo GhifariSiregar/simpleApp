@@ -3,12 +3,12 @@ import { executeQueryModel } from "../middleware/middleware.pg";
 export class UsersAuthFunction {
     async getUserID(email: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT
-                        id
-                       FROM
-                        users
-                       WHERE 
-                        email = '` + email + `';`
+            let sql: string = `SELECT
+                                id
+                               FROM
+                                users
+                               WHERE 
+                                email = '` + email + `';`
 
             executeQueryModel.executeQuery(sql)
             .then(function(data) {
@@ -27,4 +27,4 @@ export class UsersAuthFunction {
     }
 }
 
-export const usersAuthFunction = new UsersAuthFunction();
+export const usersAuthFunction: UsersAuthFunction = new UsersAuthFunction();

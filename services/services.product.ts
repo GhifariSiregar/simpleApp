@@ -1,6 +1,6 @@
 export class ProductServices {
     async getproduct(req: any, res: any): Promise<void> {
-        let productID = req.body.productID;
+        let productID: number = req.body.productID;
 
         if(productID === 1) {
             res.status(200).json({
@@ -31,4 +31,4 @@ export class ProductServices {
     }
 }
 
-export const productServices = new ProductServices();
+export const productServices: ProductServices = new ProductServices();

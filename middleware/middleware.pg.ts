@@ -1,5 +1,5 @@
-const { Client } = require('pg');
-const db = new Client({
+const { Client }: any = require('pg');
+const db: any = new Client({
     "host": "localhost",
     "port": 5432,
     "user": "postgres",
@@ -24,4 +24,4 @@ export class ExecuteQueryModel {
     }
 }
 
-export const executeQueryModel = new ExecuteQueryModel();
+export const executeQueryModel: ExecuteQueryModel = new ExecuteQueryModel();

@@ -3,23 +3,23 @@ import { executeQueryModel } from "../middleware/middleware.pg";
 export class UserDashboardModel {
     async getDashboard(req: any, res: any, id: string): Promise<void> {
         
-        let offset = 0;
+        let offset: number = 0;
         if(req.body.no) {
             offset = (parseInt(req.body.no) - 1) * 5;
         }
 
-        let sql =  `SELECT
-                     *
-                    FROM
-                     loan_list
-                    WHERE 
-                     id = '` + id + `'
-                    OFFSET
-                     ` + offset + `;`; 
+        let sql: string =  `SELECT
+                             *
+                            FROM
+                             loan_list
+                            WHERE 
+                             id = '` + id + `'
+                            OFFSET
+                             ` + offset + `;`; 
         
         await executeQueryModel.executeQuery(sql)
         .then(function(data) {
-            let dasend = [];
+            let dasend: any = [];
             for(let i = 0; i < offset + 5; i++) {
                 if(data.rows[i]) {
                     dasend.push(data.rows[i]);
@@ -45,4 +45,4 @@ export class UserDashboardModel {
     }
 }
 
-export const userDashboardModel = new UserDashboardModel();
+export const userDashboardModel: UserDashboardModel = new UserDashboardModel();

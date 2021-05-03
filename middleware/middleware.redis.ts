@@ -1,6 +1,6 @@
-import redis from "redis";
+import redis, { RedisClient } from "redis";
 
-const client = redis.createClient();
+const client: RedisClient = redis.createClient();
 
 export class RedisManagement {
     async setData(key: string, lifespan: number, data: string): Promise<void> {
@@ -22,4 +22,4 @@ export class RedisManagement {
     } 
 }
 
-export const redisManagement = new RedisManagement;
+export const redisManagement: RedisManagement = new RedisManagement;

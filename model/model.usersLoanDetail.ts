@@ -7,8 +7,8 @@ export class UserLoanDetailModel {
         try {
 
             //CHECK FOR USER TOKEN
-            const userToken = await tokenManagement.verifyToken(req.body.token);
-            const email = await redisManagement.getData(userToken.email);
+            const userToken: any = await tokenManagement.verifyToken(req.body.token);
+            const email: string = await redisManagement.getData(userToken.email);
 
             //TOKEN VERIFICATION
             if(!userToken.id || req.body.token !== email) {
@@ -20,14 +20,14 @@ export class UserLoanDetailModel {
 
             //GET LOAN LIST
             else {
-                let sql =  `SELECT
-                             *
-                            FROM
-                             loan_list
-                            WHERE 
-                             id = '` + userToken.id + `'
-                            AND
-                             invoice = ` + req.query.id + `;`
+                let sql: string =  `SELECT
+                                     *
+                                    FROM
+                                     loan_list
+                                    WHERE 
+                                     id = '` + userToken.id + `'
+                                    AND
+                                     invoice = ` + req.query.id + `;`
         
                 await executeQueryModel.executeQuery(sql)
                 .then(function(data) {
@@ -49,4 +49,4 @@ export class UserLoanDetailModel {
     }
 }
 
-export const userLoanDetailModel = new UserLoanDetailModel();
+export const userLoanDetailModel: UserLoanDetailModel = new UserLoanDetailModel();

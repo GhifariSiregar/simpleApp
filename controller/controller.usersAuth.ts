@@ -3,12 +3,12 @@ import { userAuthServices } from "../services/services.usersAuth";
 export class UserAuthController {
 
     //LOGIN BY EMAIL & PASSWORD (SESSION CREATED IN DATABASE)
-    login(req: any, res: any, next: any) {
+    login(req: any, res: any) {
         var email: string = req.body.email;
         var password: string = req.body.password;
 
         if(email && password) {
-            next();
+            userAuthServices.login(req, res);
         }
         else {
             res.status(400).json({
@@ -19,20 +19,20 @@ export class UserAuthController {
     }
 
     //LOGOUT (STOP SESSION IN DATABASE)
-    logout(req: any, res: any, next: any) {
-        next();
+    logout(req: any, res: any) {
+        userAuthServices.logout(req, res);
     }
 
     //NEW USER REGISTRATION
-    register(req: any, res: any, next: any) {
-        let email = req.body.email;
-        let name = req.body.name;
-        let address = req.body.address;
-        let occupancy = req.body.occupancy;
-        let ktp = req.body.ktp;
-        let gender = req.body.gender;
-        let password = req.body.password;
-        let confirmPassword = req.body.confirmPassword;
+    register(req: any, res: any) {
+        let email: string = req.body.email;
+        let name: string = req.body.name;
+        let address: string = req.body.address;
+        let occupancy: string = req.body.occupancy;
+        let ktp: number = req.body.ktp;
+        let gender: string = req.body.gender;
+        let password: string = req.body.password;
+        let confirmPassword: string = req.body.confirmPassword;
 
         if(!email || 
             !name || 
@@ -48,9 +48,9 @@ export class UserAuthController {
                 });
         }
         else {
-            next();
+            userAuthServices.register(req, res);
         }
     }
 }
 
-export const userAuthController = new UserAuthController();
+export const userAuthController: UserAuthController = new UserAuthController();

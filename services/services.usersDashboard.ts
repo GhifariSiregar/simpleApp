@@ -9,8 +9,8 @@ export class UserDashboardServices {
         try {
 
             //CHECK FOR USER TOKEN
-            const userToken = await tokenManagement.verifyToken(req.body.token);
-            const email = await redisManagement.getData(userToken.email);
+            const userToken: any = await tokenManagement.verifyToken(req.body.token);
+            const email: string = await redisManagement.getData(userToken.email);
 
             //GET USER LISTED LOAN BY TOKEN
             if(!userToken.id) {
@@ -39,11 +39,11 @@ export class UserDashboardServices {
     }
 
     async createLoan(req: any, res: any): Promise<void> {
-        let tenur: number = req.body.tenur;
-        let totalpinjam: number = req.body.totalpinjam;
+        let loanLength: number = req.body.loanLength;
+        let loanAmount: number = req.body.loanAmount;
 
         //LOAN CRITERIA, MUST BE BETWEEN RP1.000.000 UNTIL RP10.000.000 AND 1 UNTIL 12 LOAN LENGTH
-        if(totalpinjam < 1000000 || totalpinjam > 10000000 || tenur < 1 || tenur > 12) {
+        if(loanAmount < 1000000 || loanAmount > 10000000 || loanLength < 1 || loanLength > 12) {
             res.status(400).json({
                 "status": "FAILED",
                 "message": "VALUE_IS_OUT_OF_BOUND"
@@ -59,4 +59,4 @@ export class UserDashboardServices {
     }
 }
 
-export const usersDashboardServices = new UserDashboardServices();
+export const usersDashboardServices: UserDashboardServices = new UserDashboardServices();

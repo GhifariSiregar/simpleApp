@@ -3,13 +3,13 @@ import { passwordManagement } from "../middleware/middleware.cryptoJS";
 
 export class UserAuthServices {
 
-    async login(req: any, res: any, next: any): Promise<void> {
-        const email = req.body.email;
-        const password = req.body.password;
+    async login(req: any, res: any): Promise<void> {
+        const email: string = req.body.email;
+        const password: string = req.body.password;
 
         try {
-            const passwordRef = await userAuthModel.passwordCheck(email);
-            const userPassword = await passwordManagement.decrypt(passwordRef);
+            const passwordRef: string = await userAuthModel.passwordCheck(email);
+            const userPassword: string = await passwordManagement.decrypt(passwordRef);
 
             //COMPARE PASSWORD
             if(userPassword !== password || passwordRef === "Not Found") {
@@ -19,7 +19,7 @@ export class UserAuthServices {
                 });
             }
             else {
-                next();
+                userAuthModel.login(req, res);
             }
         }
         catch(err) {
@@ -30,11 +30,11 @@ export class UserAuthServices {
         }
     }
 
-    async register(req: any, res: any, next: any) {
+    async register(req: any, res: any) {
 
-        let email = req.body.email;
-        let password = req.body.password;
-        let confirmPassword = req.body.confirmPassword;
+        let email: string = req.body.email;
+        let password: string = req.body.password;
+        let confirmPassword: string = req.body.confirmPassword;
 
         //EMAIL VALIDATION CHECK
         if(email.split('@').length !== 2 && email.split('@')[1].split('.').length !== 2) {
@@ -60,13 +60,13 @@ export class UserAuthServices {
             });
         }
         else {
-            next();
+            userAuthModel.register(req, res);
         }
     }
 
-    async logout(req: any, res: any, next: any) {
-        next();
+    async logout(req: any, res: any) {
+        userAuthModel.logout(req, res);
     } 
 }
 
-export const userAuthServices = new UserAuthServices();
+export const userAuthServices: UserAuthServices = new UserAuthServices();

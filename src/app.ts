@@ -3,12 +3,12 @@ import cors from "cors"
 import { usersAuthRoute } from "../routes/routes.usersAuth";
 import { usersDashboardRoute } from "../routes/routes.usersDashboard";
 
-const app = express();
+const app: any = express();
 app.use(express.json());
 
 //USE CORS
-let allowedOrigins = ["http://localhost:3000"];
-let allowCors = cors({
+let allowedOrigins: any = ["http://localhost:3000"];
+let allowCors: any = cors({
     'origin': allowedOrigins
 })
 app.use(allowCors);

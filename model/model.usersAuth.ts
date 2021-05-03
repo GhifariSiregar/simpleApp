@@ -9,12 +9,12 @@ export class UserAuthModel {
     //USER LOGIN STATUS IN DATABASE
     async checkstatus(id: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT
-                        logged_in
-                       FROM
-                        users
-                       WHERE 
-                        id = '` + id + `';`
+            let sql: string = `SELECT
+                                logged_in
+                               FROM
+                                users
+                               WHERE 
+                                id = '` + id + `';`
             
             executeQueryModel.executeQuery(sql)
             .then(function(data) {
@@ -30,30 +30,30 @@ export class UserAuthModel {
     //USER REGISTRATION
     async register(req: any, res: any): Promise<void> {
 
-        let email = req.body.email;
-        let name = req.body.name;
-        let address = req.body.address;
-        let occupancy = req.body.occupancy;
-        let ktp = req.body.ktp;
-        let gender = req.body.gender;
-        let confirmPassword = req.body.confirmPassword;
+        let email: string = req.body.email;
+        let name: string = req.body.name;
+        let address: string = req.body.address;
+        let occupancy: string = req.body.occupancy;
+        let ktp: number = req.body.ktp;
+        let gender: string = req.body.gender;
+        let confirmPassword: string = req.body.confirmPassword;
 
         //PASSWORD HASHING
-        let password = passwordManagement.encrypt(confirmPassword);
+        let password: any = passwordManagement.encrypt(confirmPassword);
         
         //CREATE USER
-        let sql = `INSERT INTO
-                    users (email, name, address, occupancy, ktp, gender, logged_in, password)
-                    VALUES 
-                    ('` + email + `', '` + name + `', '` + address + `', '` + occupancy + `', '` + ktp + `', '` + gender + `', True, '` + password + `');`
+        let sql: string = `INSERT INTO
+                            users (email, name, address, occupancy, ktp, gender, logged_in, password)
+                           VALUES 
+                            ('` + email + `', '` + name + `', '` + address + `', '` + occupancy + `', '` + ktp + `', '` + gender + `', True, '` + password + `');`
         
         try {
             executeQueryModel.executeQuery(sql)
             .then(async function() {
 
                 //LOG THE USER IN
-                const userID = await usersAuthFunction.getUserID(email);
-                const userToken = await tokenManagement.signToken(userID, email);
+                const userID: string = await usersAuthFunction.getUserID(email);
+                const userToken: string = await tokenManagement.signToken(userID, email);
 
                 //CACHE THE TOKEN
                 redisManagement.setData(email, 3600, userToken);
@@ -76,12 +76,12 @@ export class UserAuthModel {
     //GET USER PASSWORD FROM DATABASE
     async passwordCheck(email: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT
-                        email, password
-                       FROM
-                        users
-                       WHERE 
-                        email = '` + email + `';`
+            let sql: string = `SELECT
+                                email, password
+                               FROM
+                                users
+                               WHERE 
+                                email = '` + email + `';`
             
             executeQueryModel.executeQuery(sql)
             .then(function(data) {
@@ -101,21 +101,21 @@ export class UserAuthModel {
 
     //USER LOGIN
     async login(req: any, res: any): Promise<void> {
-        const email = req.body.email;
-        let sql = `UPDATE
-                    users
-                   SET
-                    logged_in = True
-                   WHERE
-                    email = '` + email + `';`
+        const email: string = req.body.email;
+        let sql: string = `UPDATE
+                            users
+                           SET
+                            logged_in = True
+                           WHERE
+                            email = '` + email + `';`
 
         executeQueryModel.executeQuery(sql)
         .then(async function() {
             try {
 
                 //LOG THE USER IN
-                const userID = await usersAuthFunction.getUserID(email);
-                const userToken = await tokenManagement.signToken(userID, email);
+                const userID: string = await usersAuthFunction.getUserID(email);
+                const userToken: string = await tokenManagement.signToken(userID, email);
 
                 //CACHE THE TOKEN
                 redisManagement.setData(email, 3600, userToken);
@@ -137,13 +137,13 @@ export class UserAuthModel {
 
     //USER LOGOUT
     async logout(req: any, res: any): Promise<void> {
-        let id = req.query.id;
-        let sql = `UPDATE
-                    users
-                   SET
-                    logged_in = False
-                   WHERE
-                    id = '` + id + `';`
+        let id: string = req.query.id;
+        let sql: string = `UPDATE
+                            users
+                           SET
+                            logged_in = False
+                           WHERE
+                            id = '` + id + `';`
 
         executeQueryModel.executeQuery(sql)
         .then(function() {
@@ -162,4 +162,4 @@ export class UserAuthModel {
     }
 }
 
-export const userAuthModel = new UserAuthModel();
+export const userAuthModel: UserAuthModel = new UserAuthModel();

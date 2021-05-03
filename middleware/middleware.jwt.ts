@@ -30,4 +30,4 @@ export class TokenManagement {
     }
 }
 
-export const tokenManagement = new TokenManagement();
+export const tokenManagement: TokenManagement = new TokenManagement();
