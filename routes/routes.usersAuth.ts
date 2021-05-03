@@ -1,22 +1,16 @@
 import express from 'express';
 import { userAuthController } from "../controller/controller.usersAuth";
+import { userAuthServices } from "../services/services.usersAuth";
+import { userAuthModel } from "../model/model.usersAuth"; 
 
 const router = express.Router();
 
 //USER LOGIN, LOGOUT, REGISTER
 export class UsersAuthRoutes {
     init() {
-        router.post('/login', (req, res) => {
-            userAuthController.login(req, res);
-        })
-
-        router.post('/logout', (req, res) => {
-            userAuthController.logout(req, res);
-        })
-
-        router.post('/register', (req, res) => {
-            userAuthController.register(req, res);
-        })
+        router.post('/login', userAuthController.login, userAuthServices.login, userAuthModel.login);
+        router.post('/logout', userAuthController.logout, userAuthServices.logout, userAuthModel.logout);
+        router.post('/register', userAuthController.register, userAuthServices.register, userAuthModel.register);
 
         return router;
     }

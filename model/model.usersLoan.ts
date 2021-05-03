@@ -1,4 +1,4 @@
-import { executeQueryModel } from "./model.executeQuery";
+import { executeQueryModel } from "../middleware/middleware.pg";
 
 const jwt = require('jsonwebtoken');
 
@@ -24,14 +24,14 @@ export class UserLoanModel {
             }
             else if(req.query.id) {
                 let uid: string = decoded.id;
-                let tenur: number = req.body.tenur;
-                let totalpinjam: number = req.body.totalpinjam;
+                let loanLength: number = req.body.loanLength;
+                let loanAmount: number = req.body.loanAmount;
                                 
                 let sql = `UPDATE
                             loan_list
                            SET 
-                            loan_length = ` + tenur + `,
-                            loan_amount = ` + totalpinjam + `
+                            loan_length = ` + loanLength + `,
+                            loan_amount = ` + loanAmount + `
                            WHERE
                             invoice = '` + req.query.id + `'
                            AND
@@ -54,13 +54,13 @@ export class UserLoanModel {
             }
             else {
                 let uid: string = decoded.id;
-                let tenur: number = req.body.tenur;
-                let totalpinjam: number = req.body.totalpinjam;
+                let loanLength: number = req.body.loanLength;
+                let loanAmount: number = req.body.loanAmount;
                                 
                 let sql =  `INSERT INTO
                             loan_list (id, loan_length, loan_amount, status)
                             VALUES 
-                            ('` + uid + `', ` + tenur + `, ` + totalpinjam + `, 'Menunggu Pencairan');`
+                            ('` + uid + `', ` + loanLength + `, ` + loanAmount + `, 'Menunggu Pencairan');`
                 
                 await executeQueryModel.executeQuery(sql)
                 .then(function(data) {

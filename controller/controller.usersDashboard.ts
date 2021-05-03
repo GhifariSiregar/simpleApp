@@ -1,31 +1,58 @@
+import { tokenManagement } from "../middleware/middleware.jwt";
 import { usersDashboardServices } from "../services/services.usersDashboard";
 
-const jwt = require('jsonwebtoken');
-
 export class UserDashboardController {
-    getDashboard(req: any, res: any) {
-
-        //CHECK FOR USER TOKEN
-        jwt.verify(req.body.token, "!#shad321.", async function(err: any, decoded: any) {
-            if(err) {
-                console.log(err.message)
-                res.status(400).json({
-                    "status": "FAILED",
-                    "message": "TOKEN_EXPIRED"
-                })
-            }
+    async getDashboard(req: any, res: any, next: any) {
+        try {
+            //CHECK FOR USER TOKEN
+            const userToken = await tokenManagement.verifyToken(req.body.token);
 
             //GET USER LISTED LOAN BY TOKEN
-            else if(!decoded.id) {
+            if(!userToken.id) {
                 res.status(404).json({
                     "status": "FAILED",
                     "message": "NOT_FOUND"
                 })
             }
             else {
-                usersDashboardServices.getDashboard(req, res);
+                next();
             }
-        });       
+        }
+        catch(err) {
+            console.log(err.message)
+            res.status(400).json({
+                "status": "FAILED",
+                "message": "TOKEN_EXPIRED"
+            })
+        }
+    }
+
+    createLoan(req: any, res: any, next: any) {
+        let token: string = req.body.token;
+        let loanLength: number = req.body.loanLength;
+        let loanAmount: number = req.body.loanAmount;
+
+        if(token && loanLength && loanAmount) {
+            next();
+        }
+        else {
+            res.status(400).json({
+                "status": "FAILED",
+                "message": "THE_INPUTTED_DATA_IS_NOT_CORRECT"
+            })
+        }
+    }
+
+    loanDetail(req: any, res: any, next: any) {
+        if(req.query.id) {
+            next();
+        }
+        else {
+            res.status(400).json({
+                "status": "FAILED",
+                "message": "THE_INPUTTED_DATA_IS_NOT_CORRECT"
+            })
+        }
     }
 }
 

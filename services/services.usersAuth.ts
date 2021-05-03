@@ -1,42 +1,40 @@
 import { userAuthModel } from "../model/model.usersAuth"; 
-
-const CryptoJS = require("crypto-js");
+import { passwordManagement } from "../middleware/middleware.cryptoJS";
 
 export class UserAuthServices {
 
-    async login(req: any, res: any): Promise<void> {
+    async login(req: any, res: any, next: any): Promise<void> {
         const email = req.body.email;
         const password = req.body.password;
 
-        const passwordRef = await userAuthModel.passwordCheck(email);
+        try {
+            const passwordRef = await userAuthModel.passwordCheck(email);
+            const userPassword = await passwordManagement.decrypt(passwordRef);
 
-        //DECRYPT PASSWORD BY ITS SALT
-        let bytes  = CryptoJS.AES.decrypt(passwordRef, '23(fd*3&!');
-        let originalText = bytes.toString(CryptoJS.enc.Utf8);
-
-        //COMPARE PASSWORD
-        if(originalText !== password || passwordRef === "Not Found") {
-            res.status(400).json({
-                "status": "FAILED",
-                "message": "INVALID_EMAIL/PASSWORD"
-            });
+            //COMPARE PASSWORD
+            if(userPassword !== password || passwordRef === "Not Found") {
+                res.status(400).json({
+                    "status": "FAILED",
+                    "message": "INVALID_EMAIL/PASSWORD"
+                });
+            }
+            else {
+                next();
+            }
         }
-        else {
-            userAuthModel.login(res, email);
+        catch(err) {
+            res.status(500).json({
+                "status": "NOK",
+                "message": "INTERNAL_SERVER_ERROR"
+            });
         }
     }
 
-    async register(req: any, res: any) {
+    async register(req: any, res: any, next: any) {
 
         let email = req.body.email;
         let password = req.body.password;
         let confirmPassword = req.body.confirmPassword;
-        
-        //PASSWORD STRENGTH CONSTRAINT
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasNumbers = /\d/.test(password);
-        const hasNonalphas = /\W/.test(password);
 
         //EMAIL VALIDATION CHECK
         if(email.split('@').length !== 2 && email.split('@')[1].split('.').length !== 2) {
@@ -47,11 +45,7 @@ export class UserAuthServices {
         }
         
         //PASSWORD STRENGTH CHECK
-        else if(password.length < 8 || 
-            !hasLowerCase ||
-            !hasUpperCase ||
-            !hasNumbers ||
-            !hasNonalphas) {
+        else if(passwordManagement.isWeak(password)) {
                 res.status(400).json({
                     "status": "FAILED",
                     "message": "PASSWORD_IS_NOT_STRONG_ENOUGH"
@@ -66,12 +60,12 @@ export class UserAuthServices {
             });
         }
         else {
-            userAuthModel.register(req, res)
+            next();
         }
     }
 
-    async logout(req: any, res: any) {
-        userAuthModel.logout(req, res);
+    async logout(req: any, res: any, next: any) {
+        next();
     } 
 }
 

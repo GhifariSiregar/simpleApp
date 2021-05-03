@@ -3,12 +3,12 @@ import { userAuthServices } from "../services/services.usersAuth";
 export class UserAuthController {
 
     //LOGIN BY EMAIL & PASSWORD (SESSION CREATED IN DATABASE)
-    login(req: any, res: any) {
+    login(req: any, res: any, next: any) {
         var email: string = req.body.email;
         var password: string = req.body.password;
 
         if(email && password) {
-            userAuthServices.login(req, res)
+            next();
         }
         else {
             res.status(400).json({
@@ -19,12 +19,12 @@ export class UserAuthController {
     }
 
     //LOGOUT (STOP SESSION IN DATABASE)
-    logout(req: any, res: any) {
-        userAuthServices.logout(req, res);
+    logout(req: any, res: any, next: any) {
+        next();
     }
 
     //NEW USER REGISTRATION
-    register(req: any, res: any) {
+    register(req: any, res: any, next: any) {
         let email = req.body.email;
         let name = req.body.name;
         let address = req.body.address;
@@ -48,7 +48,7 @@ export class UserAuthController {
                 });
         }
         else {
-            userAuthServices.register(req, res)
+            next();
         }
     }
 }
