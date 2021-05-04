@@ -11,7 +11,7 @@ export class UserLoanDetailModel {
             const email: string = await redisManagement.getData(userToken.email);
 
             //TOKEN VERIFICATION
-            if(!userToken.id || req.body.token !== email) {
+            if(!userToken.id || req.headers.authorization.split(" ")[1] !== email) {
                 res.status(404).json({
                     "status": "FAILED",
                     "message": "NOT_FOUND"
