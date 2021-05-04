@@ -57,10 +57,10 @@ export class UserAuthModel {
 
                 //CACHE THE TOKEN
                 redisManagement.setData(email, 3600, userToken);
+                res.setHeader('Authorization', 'token ' + userToken);
                 res.status(200).json({
                     "status": "SUCCESS",
-                    "message": "NEW_USER_CREATED",
-                    "token": userToken
+                    "message": "NEW_USER_CREATED"
                 });
             }) 
         }
@@ -147,6 +147,7 @@ export class UserAuthModel {
 
         executeQueryModel.executeQuery(sql)
         .then(function() {
+            redisManagement.removeData(req.headers.authorization.split(" ")[1]);
             res.status(200).json({
                 "status": "SUCCESS",
                 "message": "USER_HAS_LOGGED_OUT"

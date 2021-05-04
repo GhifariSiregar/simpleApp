@@ -7,7 +7,7 @@ export class UserLoanDetailModel {
         try {
 
             //CHECK FOR USER TOKEN
-            const userToken: any = await tokenManagement.verifyToken(req.body.token);
+            const userToken: any = await tokenManagement.verifyToken(req.headers.authorization.split(" ")[1]);
             const email: string = await redisManagement.getData(userToken.email);
 
             //TOKEN VERIFICATION

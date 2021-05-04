@@ -19,7 +19,11 @@ export class RedisManagement {
                 }
             })
         })
-    } 
+    }
+
+    async removeData(key: string): Promise<void> {
+        client.del(key);
+    }
 }
 
 export const redisManagement: RedisManagement = new RedisManagement;
