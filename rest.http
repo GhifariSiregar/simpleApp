@@ -79,3 +79,8 @@ POST http://localhost:3300/logout?id=1 HTTP/1.1
 ###
 
 GET http://localhost:3300/user/dashboard?id=3 HTTP/1.1
+
+
+###
+
+GET http://localhost:3300/user/dashboard?id=3 HTTP/1.1
