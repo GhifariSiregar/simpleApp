@@ -11,7 +11,7 @@ export class UserDashboardServices {
             userDashboardModel.getDashboard(req, res, userToken.id);
 
         }
-        catch(err) {
+        catch(err: any) {
             console.log(err.message)
             res.status(400).json({
                 "status": "FAILED",

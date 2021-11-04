@@ -45,7 +45,7 @@ export class UserAuthServices {
         }
         
         //PASSWORD STRENGTH CHECK
-        else if(passwordManagement.isWeak(password)) {
+        else if(await passwordManagement.isWeak(password)) {
                 res.status(400).json({
                     "status": "FAILED",
                     "message": "PASSWORD_IS_NOT_STRONG_ENOUGH"

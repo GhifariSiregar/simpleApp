@@ -20,7 +20,7 @@ export class CheckUsersValidity {
                 next();
             }
         }
-        catch(err) {
+        catch(err: any) {
             console.log(err.message)
             res.status(400).json({
                 "status": "FAILED",
